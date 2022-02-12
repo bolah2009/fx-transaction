@@ -1,0 +1,122 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  '/transactions':
+    post:
+      summary: Creates a transaction
+      tags:
+        - Transactions
+      description: ' Creates a transaction'
+      parameters: []
+      responses:
+        '201':
+          description: transaction created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customer:
+                  type: string
+                input_amount:
+                  type: string
+                input_currency:
+                  type: string
+                output_amount:
+                  type: string
+                output_currency:
+                  type: string
+              required:
+                - customer
+                - input_amount
+                - input_currency
+                - output_amount
+                - output_currency
+    get:
+      summary: Retrieves all transactions
+      tags:
+        - Transactions
+      description: ' Retrieves all transactions'
+      responses:
+        '200':
+          description: transactions found
+          content:
+            application/json:
+              schema:
+                type: array
+                properties:
+                  - id:
+                      type: string
+                    customer:
+                      type: string
+                    input_amount:
+                      type: string
+                    input_currency:
+                      type: string
+                    output_amount:
+                      type: string
+                    output_currency:
+                      type: string
+                required:
+                  - customer
+                  - input_amount
+                  - input_currency
+                  - output_amount
+                  - output_currency
+  '/transactions/{id}':
+    get:
+      summary: Retrieves a transaction
+      tags:
+        - Transaction
+      description: ' Retrieves a transaction'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: transaction found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  customer:
+                    type: string
+                  input_amount:
+                    type: string
+                  input_currency:
+                    type: string
+                  output_amount:
+                    type: string
+                  output_currency:
+                    type: string
+                required:
+                  - customer
+                  - input_amount
+                  - input_currency
+                  - output_amount
+                  - output_currency
+        '404':
+          description: transaction not found
+servers:
+  - url: http://{defaultHost}
+    variables:
+      defaultHost:
+        default: www.example.com
+  - url: http://{defaultHost}:{port}
+    variables:
+      defaultHost:
+        default: localhost
+      port:
+        default: '3000'
