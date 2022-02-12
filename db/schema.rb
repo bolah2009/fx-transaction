@@ -12,6 +12,16 @@
 
 ActiveRecord::Schema.define(version: 20_220_210_174_212) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension 'pgcrypto'
   enable_extension 'plpgsql'
 
+  create_table 'transactions', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
+    t.string 'customer'
+    t.decimal 'input_amount', precision: 10, scale: 2
+    t.string 'input_currency'
+    t.decimal 'output_amount', precision: 10, scale: 2
+    t.string 'output_currency'
+    t.datetime 'created_at', precision: 6, null: false
+    t.datetime 'updated_at', precision: 6, null: false
+  end
 end
