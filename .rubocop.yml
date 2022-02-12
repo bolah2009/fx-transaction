@@ -27,8 +27,15 @@ Metrics/AbcSize:
 Metrics/ClassLength:
   Max: 150
 Metrics/BlockLength:
+  Exclude:
+    - 'spec/requests/api/transaction_spec.rb'
+    - 'spec/swagger_helper.rb'
   IgnoredMethods: ['describe', 'context', 'shared_examples']
   Max: 30
+
+Naming/FileName:
+  Exclude:
+    - 'config/initializers/rswag-ui.rb'
 
 Style/Documentation:
   Enabled: false
