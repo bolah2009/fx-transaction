@@ -110,10 +110,10 @@ paths:
         '404':
           description: transaction not found
 servers:
-  - url: http://{defaultHost}
+  - url: https://{defaultHost}
     variables:
       defaultHost:
-        default: www.example.com
+        default: aza-fx-transaction-api.herokuapp.com
   - url: http://{defaultHost}:{port}
     variables:
       defaultHost:
