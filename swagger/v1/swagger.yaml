@@ -6,16 +6,50 @@ info:
 paths:
   '/transactions':
     post:
-      summary: Creates a transaction
+      summary: Creates a new transaction
       tags:
-        - Transactions
-      description: ' Creates a transaction'
+        - 'POST /transactions:'
+      description: create a new transaction
       parameters: []
       responses:
         '201':
-          description: transaction created
+          description: |-
+            transaction created successfully<br>\
+                                  returns newly created transaction as json
+          content:
+            application/json:
+              example:
+                id: 9057110c-6fcd-4c60-93ee-713d8b8f4ec0
+                customer: aoqkq
+                input_amount: '4032.02'
+                input_currency: NGN
+                output_amount: '34.21'
+                output_currency: EUR
+                created_at: 2022-02-13 16:50:34 UTC
+                updated_at: 2022-02-13 16:50:34 UTC
         '422':
           description: invalid request
+          content:
+            application/json:
+              example:
+                customer:
+                  - only allows 3 to 5 alphanumerics
+                input_amount:
+                  - must be 8 digits number with 2 decimal places
+                input_currency:
+                  - only allows 3 upper case letters (alpha codes)
+                output_amount:
+                  - must be 8 digits number with 2 decimal places
+                output_currency:
+                  - only allows 3 upper case letters (alpha codes)
+        '415':
+          description: return an Unsupported Media Type error when invalid media type
+            is supplied
+          content:
+            application/json:
+              example:
+                error:
+                  message: Request data not supported, check your header content type
       requestBody:
         content:
           application/json:
@@ -32,6 +66,12 @@ paths:
                   type: string
                 output_currency:
                   type: string
+              example:
+                customer: ezSe7
+                input_amount: '4032.02'
+                input_currency: NGN
+                output_amount: '34.21'
+                output_currency: EUR
               required:
                 - customer
                 - input_amount
@@ -41,13 +81,24 @@ paths:
     get:
       summary: Retrieves all transactions
       tags:
-        - Transactions
-      description: ' Retrieves all transactions'
+        - 'GET /transactions:'
+      description: list all transactions in the system
       responses:
         '200':
-          description: transactions found
+          description: returns an array of transactions when found. <br>               It
+            returns an empty array when there's no transaction found
           content:
             application/json:
+              example:
+                - id: 4e51389e-c78a-4c18-baea-6cd41911c6f0
+                  customer: drf34
+                  input_amount: '4000.01'
+                  input_currency: NGN
+                  output_amount: '423.42'
+                  output_currency: EUR
+                  created_at: '2022-02-12T20:46:53.997Z'
+                  updated_at: '2022-02-12T20:46:53.997Z'
+                - id: '...'
               schema:
                 type: array
                 properties:
@@ -73,19 +124,29 @@ paths:
     get:
       summary: Retrieves a transaction
       tags:
-        - Transaction
-      description: ' Retrieves a transaction'
+        - 'GET /transactions/<id>:'
+      description: get the specific transaction by ID
       parameters:
         - name: id
           in: path
+          description: This is an id of an existing transaction with uuid format
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: transaction found
+          description: returns a transaction with the following example and schema
           content:
             application/json:
+              example:
+                id: 3d8b4932-4e58-405c-9c06-05d9d9620188
+                customer: nvWzh
+                input_amount: '4032.02'
+                input_currency: NGN
+                output_amount: '34.21'
+                output_currency: EUR
+                created_at: 2022-02-13 16:50:34 UTC
+                updated_at: 2022-02-13 16:50:34 UTC
               schema:
                 type: object
                 properties:
@@ -101,14 +162,31 @@ paths:
                     type: string
                   output_currency:
                     type: string
+                  created_at:
+                    type: datetime
+                  updated_at:
+                    type: datetime
                 required:
                   - customer
                   - input_amount
                   - input_currency
                   - output_amount
                   - output_currency
+                  - created_at
+                  - updated_at
         '404':
-          description: transaction not found
+          description: returns a json object, with error message when transaction
+            is not found
+          content:
+            application/json:
+              example:
+                error:
+                  message: Couldn't find Transaction with 'id'=invalid
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
 servers:
   - url: https://{defaultHost}
     variables:

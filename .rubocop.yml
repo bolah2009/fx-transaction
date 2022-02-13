@@ -72,6 +72,9 @@ RSpec/EmptyExampleGroup:
   Exclude:
     - 'spec/requests/api/*'
 RSpec/MultipleMemoizedHelpers:
-  Max: 6
+  Max: 10
 RSpec/NestedGroups:
-  Max: 6
+  Max: 10
+RSpec/VariableName:
+  Exclude:
+    - 'spec/requests/api/*'
