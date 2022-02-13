@@ -1,4 +1,5 @@
 class TransactionsController < ApplicationController
+  prepend_before_action :ensure_json, only: :create
   before_action :transaction_params, only: :create
 
   # GET /transactions
@@ -31,5 +32,12 @@ class TransactionsController < ApplicationController
   def transaction_params
     params.require(:transaction).permit(:customer, :input_amount, :input_currency, :output_amount,
                                         :output_currency)
+  end
+
+  def ensure_json
+    return if request.content_type == 'application/json'
+
+    render json: { error: { message: 'Request data not supported, check your header content type' } },
+           status: :unsupported_media_type
   end
 end

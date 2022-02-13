@@ -73,9 +73,10 @@ RSpec.describe '/transactions', type: :request do
   end
 
   describe 'POST /transactions' do
-    subject(:request) { post path, params:, as: :json }
+    subject(:request) { post path, params:, headers:, as: :json }
 
     let(:params) { { transaction: attribute } }
+    let(:headers) { { 'Content-Type': 'application/json' } }
 
     context 'with valid parameters' do
       let(:attribute) { valid_attributes }
@@ -163,6 +164,22 @@ RSpec.describe '/transactions', type: :request do
             expect(json_response['output_currency']).to include error_message
           end
         end
+      end
+    end
+
+    context 'with wrong media type' do
+      let(:headers) { { 'Content-Type': 'application/foo' } }
+      let(:attribute) { valid_attributes }
+
+      before { request }
+
+      it 'respond with an unsupported media type status' do
+        expect(response).to have_http_status(:unsupported_media_type)
+      end
+
+      it 'renders an error message' do
+        error_message = 'Request data not supported, check your header content type'
+        expect(json_response['error']['message']).to eq error_message
       end
     end
   end
