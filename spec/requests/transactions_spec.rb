@@ -183,4 +183,35 @@ RSpec.describe '/transactions', type: :request do
       end
     end
   end
+
+  describe 'PUT /transactions/{id}' do
+    subject(:request) { patch path, params:, headers:, as: :json }
+
+    let(:params) { { transaction: new_transaction_attribute } }
+    let(:path) { "/transactions/#{id}" }
+    let(:headers) { { 'Content-Type': 'application/json' } }
+
+    let(:old_transaction) { create(:transaction) }
+    let(:id) { old_transaction.id }
+
+    context 'with valid parameters' do
+      let(:new_transaction_attribute) { attributes_for(:transaction, input_currency: 'CCC') }
+
+      it 'updates the old transaction' do
+        request
+
+        expect(Transaction.find(id).input_currency).to eq 'CCC'
+      end
+    end
+
+    context 'with invalid parameters' do
+      let(:new_transaction_attribute) { attributes_for(:transaction, input_currency: 'aa') }
+
+      it 'does not update the old transaction' do
+        request
+
+        expect(Transaction.find(id).input_currency).to eq old_transaction.input_currency
+      end
+    end
+  end
 end
